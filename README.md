@@ -1,15 +1,15 @@
-## Why an other implementation of Result pattern?
+## Why another implementation of the Result pattern?
 
-This package arise from the need to specify expected errors from API calls and handle them in a more convenient way. 
-Original workaround was to use comments on function signature:
+This package arises from the need to specify expected errors from API calls and handle them in a more convenient way.
+The original workaround was to use comments on the function signature:
     
 ```dart
 // Throws Unauthorized, InvalidFormField
 Future<Profile> editProfile(EditProfile editProfile) async
 ```
-But comments are not checked neither by compiler nor on runtime. So they become outdated and not reliable.
+But comments are not checked either by the compiler or on runtime. So they become outdated and not reliable.
 
-With operation_result package errors can be specified in the next way:
+With the operation_result package errors can be specified in the next way:
 
 ```dart
 AsyncResult<Profile, Errors2<Unauthorized, InvalidFormField>> editProfile(
@@ -18,7 +18,7 @@ AsyncResult<Profile, Errors2<Unauthorized, InvalidFormField>> editProfile(
 
 ## Usage
 
-Example show how operation_result can be used to handle API errors. 
+The example shows how operation_result can be used to handle API errors.
 
 ```dart
 
@@ -112,10 +112,10 @@ void onEditProfilePressed() async {
 
 ```
 
-## What is package is not meant to be used for?
+## What is the package not meant to be used for?
 
-This package don't have a goal to replace exceptions as generic errors handling mechanism in Dart.
-It is tailored for specific use case of "expected" errors, where usage of exceptions is not convenient.
+This package doesn't have a goal to replace exceptions as a generic error-handling mechanism in Dart.
+It is tailored for the specific use case of "expected" errors, where the usage of exceptions is not convenient.
 
 ## Limitations and drawbacks
 

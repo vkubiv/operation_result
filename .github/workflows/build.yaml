@@ -1,0 +1,37 @@
+name: Build
+
+on:
+  pull_request:
+    paths-ignore:
+      - "**.md"
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - "**.md"
+
+jobs:
+  flutter:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: subosito/flutter-action@v2
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - run: cd full_examples/flutter_login && flutter pub get
+      - run: cd full_examples/notes_app && flutter pub get
+
+      - run: dart format lib test --set-exit-if-changed --line-length=120
+
+      - run: flutter analyze
+
+      - run: flutter test --no-pub --coverage
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

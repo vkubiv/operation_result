@@ -1,21 +1,15 @@
 name: operation_result
-description: A starting point for Dart libraries or applications.
+description: The Result that allows to specify a list of expected errors.
 version: 1.0.0
-# repository: https://github.com/my_org/my_repo
+
+homepage: https://github.com/vkubiv/operation_result
+repository: https://github.com/vkubiv/operation_result
+issue_tracker: https://github.com/vkubiv/operation_result/issues
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
-  flutter: ">=3.0.0"
-
-dependencies:
-  flutter:
-    sdk: flutter
 
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
-  flutter_lints: ^2.0.0
-  mocktail: ^0.3.0
-
-flutter:
+  lints: ^3.0.0
+  test: ^1.24.0
