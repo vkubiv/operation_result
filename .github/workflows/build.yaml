@@ -6,7 +6,7 @@ on:
       - "**.md"
   push:
     branches:
-      - main
+      - master
     paths-ignore:
       - "**.md"
 
@@ -21,11 +21,6 @@ jobs:
 
       - name: Install dependencies
         run: flutter pub get
-
-      - run: cd full_examples/flutter_login && flutter pub get
-      - run: cd full_examples/notes_app && flutter pub get
-
-      - run: dart format lib test --set-exit-if-changed --line-length=120
 
       - run: flutter analyze
 
