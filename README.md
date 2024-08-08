@@ -1,3 +1,7 @@
+<a href="https://github.com/vkubiv/operation_result/actions"><img src="https://github.com/vkubiv/operation_result/workflows/Build/badge.svg" alt="Build Status"></a>
+[![codecov](https://codecov.io/gh/vkubiv/operation_result/branch/master/graph/badge.svg)](https://codecov.io/gh/vkubiv/operation_result)
+
+
 ## Why another implementation of the Result pattern?
 
 This package arises from the need to specify expected errors from API calls and handle them in a more convenient way.
