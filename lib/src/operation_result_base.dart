@@ -1,17 +1,3 @@
-/// Handling errors from operations like API calls is often a challenging task.
-/// Given operation can fail for a lot of reasons. It can be a network error, server error, or a validation error.
-/// To ease for developers burden of handling errors, we need to introduce concepts of specified and unspecified errors.
-/// There are a lot of rare errors that can happens in the system like dns failure, out of memory,
-/// errors caused by incorrect implementation, etc.
-/// It is unpractical to handle them specifically, we just need general handler, discoverability and traceability for them.
-/// This is unspecified error and Dart has perfect mechanism for this - exceptions.
-/// They provide good discoverability and traceability. And it easy to write a general handler for them.
-/// The second case is specified(expected) errors. They are errors that we can predict and handle them in meaningful ways.
-/// For example, validation errors, we can show what exactly is wrong with the user input. Or auth token expired error,
-/// we can show a re-login dialog and so on. To simplify handling of specified errors we need the way to
-/// specify exhaustive list of them on function declaration.
-/// Result class is implementation result pattern that tries to solve this problem by providing a way to specify expected errors.
-///
 /// Example of usage:
 /// ```dart
 /// AsyncResult<AuthToken, Errors2<InvalidCredentials, EmailNotConfirmed>> login(String login, String password) {
@@ -81,7 +67,7 @@ class Result<T, Errors extends IExpectedErrors> {
   /// Transform successful result with given function. If operation failed, returns failed result with the same errors.
   Result<U, Errors> map<U>(U Function(T) f) {
     if (_data != null) {
-      return Result.success(f(_data), _expectedErrors);
+      return Result.success(f(_data  as T), _expectedErrors);
     } else {
       return Result.error(errors, _expectedErrors);
     }
@@ -93,7 +79,7 @@ class Result<T, Errors extends IExpectedErrors> {
   /// Example:
   /// ```dart
   ///
-  /// Errors2<ApiNotAuthorized, ValidationError> httpPost(String path, Object data) {
+  /// Errors2<Unauthorized, ValidationError> httpPost(String path, Object data) {
   ///   ...
   /// }
   ///
@@ -103,7 +89,7 @@ class Result<T, Errors extends IExpectedErrors> {
   ///     success: (r) => AuthToken.parse(r.data),
   ///     failure: (e) => switch (e) {
   ///       (ValidationError e) when e.code == 'email-not-confirmed' => EmailNotConfirmed(),
-  ///       (ApiNotAuthorized) => InvalidCredentials(),
+  ///       (Unauthorized) => InvalidCredentials(),
   ///       _ => e
   ///     });
   /// }
@@ -152,7 +138,7 @@ class Result<T, Errors extends IExpectedErrors> {
   /// Example:
   /// ```dart
   ///
-  /// Errors2<ApiNotAuthorized, ValidationError> httpPost(String path, Object data) {
+  /// Errors2<Unauthorized, ValidationError> httpPost(String path, Object data) {
   ///   ...
   /// }
   ///
@@ -162,7 +148,7 @@ class Result<T, Errors extends IExpectedErrors> {
   ///     success: (r) => AuthToken.parse(r.data),
   ///     failure: (e) => switch (e) {
   ///       (ValidationError e) when e.code == 'email-not-confirmed' => EmailNotConfirmed(),
-  ///       (ApiNotAuthorized) => InvalidCredentials(),
+  ///       (Unauthorized) => InvalidCredentials(),
   ///       _ => e
   ///     });
   /// }

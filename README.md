@@ -1,10 +1,10 @@
 ## Why an other implementation of Result pattern?
 
 This package arise from the need to specify expected errors from API calls and handle them in a more convenient way. 
-Original workaround was to use comments function signature:
+Original workaround was to use comments on function signature:
     
 ```dart
-// Throws ApiNotAuthorized, InvalidFormField
+// Throws Unauthorized, InvalidFormField
 Future<Profile> editProfile(EditProfile editProfile) async
 ```
 But comments are not checked neither by compiler nor on runtime. So they become outdated and not reliable.
@@ -12,7 +12,7 @@ But comments are not checked neither by compiler nor on runtime. So they become 
 With operation_result package errors can be specified in the next way:
 
 ```dart
-AsyncResult<Profile, Errors2<ApiNotAuthorized, InvalidFormField>> editProfile(
+AsyncResult<Profile, Errors2<Unauthorized, InvalidFormField>> editProfile(
     EditProfile editProfile) async
 ```
 
@@ -22,7 +22,7 @@ Example show how operation_result can be used to handle API errors.
 
 ```dart
 
-AsyncResult<Response, Errors2<ApiNotAuthorized, ValidationError>> httpPost(String path,
+AsyncResult<Response, Errors2<Unauthorized, ValidationError>> httpPost(String path,
     Object data) async {
   ...
   if (success) {
@@ -30,7 +30,7 @@ AsyncResult<Response, Errors2<ApiNotAuthorized, ValidationError>> httpPost(Strin
   }
 
   if (code == 401) {
-    return failure2(ApiNotAuthorized());
+    return failure2(Unauthorized());
   }
 
   if (code == 400) {
@@ -48,21 +48,21 @@ AsyncResult<AuthToken, Errors2<InvalidCredentials, EmailNotConfirmed>> login(Str
       failure: (e) =>
       switch (e) {
         (ValidationError e) when e.code == 'email-not-confirmed' => EmailNotConfirmed(),
-        (ApiNotAuthorized) => InvalidCredentials(),
+        (Unauthorized) => InvalidCredentials(),
         _ => e
       });
 }
 
-AsyncResult<Profile, Errors2<ApiNotAuthorized, InvalidFormField>> editProfile(
+AsyncResult<Profile, Errors2<Unauthorized, InvalidFormField>> editProfile(
     EditProfile editProfile) async {
-  final response = await httpPost('/profile/edit', data: editProfile.toMap());
+  final response = await httpPost('/profile/edit', editProfile.toMap());
   return response.forward2(
     success: (response) => Profile.fromMap(response.data),
     failure: (e) =>
     switch (e) {
-      (ApiNotAuthorized e) => e,
+      (Unauthorized e) => e,
       (ValidationError e) when e.code == 'incorrect-value' =>
-          InvalidFormField(fieldName: e.incorrectValue, message: e.details, originalError: e),
+          InvalidFormField(fieldName: e.incorrectValue, message: e.message),
       _ => e
     },
   );
@@ -72,7 +72,7 @@ AsyncResult<Profile, Errors2<ApiNotAuthorized, InvalidFormField>> editProfile(
 void onLoginPressed() async {
   final loginResult = await login('login', 'password');
   if (loginResult.hasError<InvalidCredentials>()) {
-    form.setFailure(['Password or email are incorrect'.localize]);
+    form.setFailure(['Password or email are incorrect']);
     return;
   }
 
@@ -88,8 +88,8 @@ void onLoginPressed() async {
 
 // Profile screen
 void onEditProfilePressed() async {
-  final editResult = await editProfile(context, editPatient);
-  if (editResult.hasError<ApiNotAuthorized>()) {
+  final editResult = await editProfile(editProfile);
+  if (editResult.hasError<Unauthorized>()) {
     router.redirectToLoginPage();
     return;
   }
@@ -107,7 +107,7 @@ void onEditProfilePressed() async {
     return;
   }
 
-  formStatus.setSuccess();
+  form.setSuccess();
 }
 
 ```
@@ -119,7 +119,7 @@ It is tailored for specific use case of "expected" errors, where usage of except
 
 ## Limitations and drawbacks
 
-Dart generics do not supports variadic parameters, so you need to use specific types like `Errors2`, `Errors3` etc.
-And matching function like `forward2`, `forward3`, `success2`, `failure2` etc.
+* Dart generics do not supports variadic parameters, so you need to use specific types like `Errors2`, `Errors3` etc.
+And corresponding function like `forward2`, `forward3`, `success2`, `failure2` etc.
 
-Most of checks are done on runtime.
+* Most of checks are done on runtime.
