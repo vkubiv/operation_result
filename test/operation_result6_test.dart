@@ -28,7 +28,8 @@ void main() {
     });
 
     test('should return failure', () {
-      final Result<int, Errors6<Failure1, Failure2, Failure3, Failure4, Failure5, Failure6>> result = failure6(Failure1('error'));
+      final Result<int, Errors6<Failure1, Failure2, Failure3, Failure4, Failure5, Failure6>> result =
+          failure6(Failure1('error'));
 
       expect(result.successful, isFalse);
       expect(result.failed, isTrue);
@@ -61,7 +62,8 @@ void main() {
     });
 
     test('forward failed result', () {
-      final Result<int, Errors6<Failure1, Failure2, Failure3, Failure4, Failure5, Failure6>> result = failure6(Failure1('error'));
+      final Result<int, Errors6<Failure1, Failure2, Failure3, Failure4, Failure5, Failure6>> result =
+          failure6(Failure1('error'));
 
       final forwarded = result.forward6(failure: (e) => e);
 
@@ -75,7 +77,8 @@ void main() {
     });
 
     test('ensureSuccess should throw error on failure', () {
-      final Result<int, Errors6<Failure1, Failure2, Failure3, Failure4, Failure5, Failure6>> result = failure6(Failure1('error'));
+      final Result<int, Errors6<Failure1, Failure2, Failure3, Failure4, Failure5, Failure6>> result =
+          failure6(Failure1('error'));
 
       expect(() => result.ensureSuccess(), throwsA(isA<AssertionError>()));
     });

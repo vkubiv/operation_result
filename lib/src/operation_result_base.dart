@@ -67,7 +67,7 @@ class Result<T, Errors extends IExpectedErrors> {
   /// Transform successful result with given function. If operation failed, returns failed result with the same errors.
   Result<U, Errors> map<U>(U Function(T) f) {
     if (_data != null) {
-      return Result.success(f(_data  as T), _expectedErrors);
+      return Result.success(f(_data as T), _expectedErrors);
     } else {
       return Result.error(errors, _expectedErrors);
     }
@@ -89,7 +89,7 @@ class Result<T, Errors extends IExpectedErrors> {
   ///     success: (r) => AuthToken.parse(r.data),
   ///     failure: (e) => switch (e) {
   ///       (ValidationError e) when e.code == 'email-not-confirmed' => EmailNotConfirmed(),
-  ///       (Unauthorized) => InvalidCredentials(),
+  ///       (Unauthorized _) => InvalidCredentials(),
   ///       _ => e
   ///     });
   /// }
@@ -148,7 +148,7 @@ class Result<T, Errors extends IExpectedErrors> {
   ///     success: (r) => AuthToken.parse(r.data),
   ///     failure: (e) => switch (e) {
   ///       (ValidationError e) when e.code == 'email-not-confirmed' => EmailNotConfirmed(),
-  ///       (Unauthorized) => InvalidCredentials(),
+  ///       (Unauthorized _) => InvalidCredentials(),
   ///       _ => e
   ///     });
   /// }

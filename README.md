@@ -52,7 +52,7 @@ AsyncResult<AuthToken, Errors2<InvalidCredentials, EmailNotConfirmed>> login(Str
       failure: (e) =>
       switch (e) {
         (ValidationError e) when e.code == 'email-not-confirmed' => EmailNotConfirmed(),
-        (Unauthorized) => InvalidCredentials(),
+        (Unauthorized _) => InvalidCredentials(),
         _ => e
       });
 }

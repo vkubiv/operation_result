@@ -40,7 +40,8 @@ void main() {
     });
 
     test('should return multiple failures', () {
-      final Result<int, Errors3<Failure1, Failure2, Failure3>> result = failures3([Failure1('error1'), Failure1('error2')]);
+      final Result<int, Errors3<Failure1, Failure2, Failure3>> result =
+          failures3([Failure1('error1'), Failure1('error2')]);
 
       expect(result.successful, isFalse);
       expect(result.failed, isTrue);
@@ -238,6 +239,5 @@ void main() {
         return result.forward2(failure: (e) => e);
       }, throwsA(isA<AssertionError>()));
     });
-
   });
 }
