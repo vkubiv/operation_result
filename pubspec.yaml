@@ -1,6 +1,6 @@
 name: operation_result
 description: The Result that allows to specify a list of expected errors.
-version: 1.0.0
+version: 1.0.1
 
 homepage: https://github.com/vkubiv/operation_result
 repository: https://github.com/vkubiv/operation_result

@@ -27,8 +27,8 @@ AsyncResult<AuthToken, Errors2<InvalidCredentials, EmailNotConfirmed>> login(Str
   return response.forward2(
       success: (r) => AuthToken.parse(r.data),
       failure: (e) => switch (e) {
-            (ValidationError e) when e.code == 'email-not-confirmed' => EmailNotConfirmed(),
-            (Unauthorized _) => InvalidCredentials(),
+            ValidationError e when e.code == 'email-not-confirmed' => EmailNotConfirmed(),
+            Unauthorized _ => InvalidCredentials(),
             _ => e
           });
 }
@@ -38,8 +38,8 @@ AsyncResult<Profile, Errors2<Unauthorized, InvalidFormField>> editProfile(Profil
   return response.forward2(
     success: (response) => Profile.fromMap(response.data),
     failure: (e) => switch (e) {
-      (Unauthorized e) => e,
-      (ValidationError e) when e.code == 'incorrect-value' =>
+      Unauthorized e => e,
+      ValidationError e when e.code == 'incorrect-value' =>
         InvalidFormField(fieldName: e.incorrectValue, message: e.message),
       _ => e
     },
