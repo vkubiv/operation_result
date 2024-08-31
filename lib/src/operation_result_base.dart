@@ -88,8 +88,8 @@ class Result<T, Errors extends IExpectedErrors> {
   ///   return response.forward2(
   ///     success: (r) => AuthToken.parse(r.data),
   ///     failure: (e) => switch (e) {
-  ///       ValidationError e when e.code == 'email-not-confirmed' => EmailNotConfirmed(),
-  ///       Unauthorized => InvalidCredentials(),
+  ///       (ValidationError e) when e.code == 'email-not-confirmed' => EmailNotConfirmed(),
+  ///       (Unauthorized) => InvalidCredentials(),
   ///       _ => e
   ///     });
   /// }
@@ -147,8 +147,8 @@ class Result<T, Errors extends IExpectedErrors> {
   ///   return response.forward2(
   ///     success: (r) => AuthToken.parse(r.data),
   ///     failure: (e) => switch (e) {
-  ///       ValidationError e when e.code == 'email-not-confirmed' => EmailNotConfirmed(),
-  ///       Unauthorized => InvalidCredentials(),
+  ///       (ValidationError e) when e.code == 'email-not-confirmed' => EmailNotConfirmed(),
+  ///       (Unauthorized) => InvalidCredentials(),
   ///       _ => e
   ///     });
   /// }
