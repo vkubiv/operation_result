@@ -28,20 +28,23 @@ The example shows how operation_result can be used to handle API errors.
 
 AsyncResult<Response, Errors2<Unauthorized, ValidationError>> httpPost(String path,
     Object data) async {
-  ...
-  if (success) {
+  final response = await client.post(path, data);
+  
+  if (response.statusCode == 200) {
     return success2(response);
   }
 
-  if (code == 401) {
+  if (response.statusCode == 401) {
     return failure2(Unauthorized());
   }
 
-  if (code == 400) {
-  final errors = readErrorsJson(response);
-      // Result can contains multiple errors.
-      return failures2(errors.map((e) => ValidationError.fromMap(e)));
+  if (response.statusCode == 400) {
+    final List<dynamic> errors = response.data['errors'];
+    // Result can contains multiple errors.
+    return failures2(errors.map((e) => ValidationError.fromMap(e)));
   }
+
+  throw Exception('Unexpected status code: ${response.statusCode}');
 }
 
 AsyncResult<AuthToken, Errors2<InvalidCredentials, EmailNotConfirmed>> login(String login,
@@ -98,10 +101,10 @@ void onEditProfilePressed() async {
     return;
   }
 
-  final filedErrors = editResult.getErrors<InvalidFormField>();
-  if (filedErrors.isNotEmpty) {
-    for (final filedError in filedErrors) {
-      form.setError(filedError.fieldName, filedError.message);
+  final fieldErrors = editResult.getErrors<InvalidFormField>();
+  if (fieldErrors.isNotEmpty) {
+    for (final fieldError in fieldErrors) {
+      form.setError(fieldError.fieldName, fieldError.message);
     }
     return;
   }
@@ -123,7 +126,7 @@ It is tailored for the specific use case of "expected" errors, where the usage o
 
 ## Limitations and drawbacks
 
-* Dart generics do not supports variadic parameters, so you need to use specific types like `Errors2`, `Errors3` etc.
+* Dart generics do not support variadic parameters, so you need to use specific types like `Errors2`, `Errors3` etc.
 And corresponding function like `forward2`, `forward3`, `success2`, `failure2` etc.
 
 * Most of checks are done on runtime.
