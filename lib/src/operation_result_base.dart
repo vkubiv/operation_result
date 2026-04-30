@@ -99,37 +99,38 @@ class Result<T, Errors extends IExpectedErrors> {
   }) {
     final expected = Errors1<E0>();
 
+    return _forward(success: success, failure: failure, expected: expected);
+  }
+
+  Result<U, E > _forward<U, E extends IExpectedErrors>({
+    U Function(T r)? success,
+    Object Function(Object err)? failure,
+    required IExpectedErrors expected,
+  }) {
+
     if (success == null && failure == null) {
       throw AssertionError('Either success or failure should be provided');
     }
 
-    if (_data == null && errors.isEmpty) {
-      throw AssertionError('Result object in incorrect state, should have either data or errors');
-    }
-
-    if (_data != null) {
-      if (success == null) {
-        throw AssertionError('Cannot forward a successful result without a success callback');
+    if (errors.isNotEmpty) {
+      var resultingErrors = errors;
+      if (failure != null) {
+        resultingErrors = resultingErrors.map(failure).toList();
       }
 
-      return Result.success(success(_data as T), expected);
+      final unexpected = resultingErrors.where((e) => !expected.isExpectedError(e));
+      if (unexpected.isNotEmpty) {
+        throw AssertionError('Cannot forward an unexpected errors: $unexpected');
+      }
+
+      return Result.error(resultingErrors, expected);
     }
 
-    if (errors.isNotEmpty && failure == null) {
-      throw AssertionError('Cannot forward a failed result without a failure callback');
+    if (success == null) {
+      throw AssertionError('Cannot forward a successful result without a success callback');
     }
 
-    var resultingErrors = errors;
-    if (failure != null) {
-      resultingErrors = resultingErrors.map(failure).toList();
-    }
-
-    final unexpected = resultingErrors.where((e) => !expected.isExpectedError(e));
-    if (unexpected.isNotEmpty) {
-      throw AssertionError('Cannot forward an unexpected errors: $unexpected');
-    }
-
-    return Result.error(resultingErrors, expected);
+    return Result.success(success(_data as T), expected);
   }
 
   /// Allows to forward and transform successful and failed results.
@@ -158,37 +159,7 @@ class Result<T, Errors extends IExpectedErrors> {
   }) {
     final expected = Errors2<E0, E1>();
 
-    if (success == null && failure == null) {
-      throw AssertionError('Either success or failure should be provided');
-    }
-
-    if (_data == null && errors.isEmpty) {
-      throw AssertionError('Result object in incorrect state, should have either data or errors');
-    }
-
-    if (_data != null) {
-      if (success == null) {
-        throw AssertionError('Cannot forward a successful result without a success callback');
-      }
-
-      return Result.success(success(_data as T), expected);
-    }
-
-    if (errors.isNotEmpty && failure == null) {
-      throw AssertionError('Cannot forward a failed result without a failure callback');
-    }
-
-    var resultingErrors = errors;
-    if (failure != null) {
-      resultingErrors = resultingErrors.map(failure).toList();
-    }
-
-    final unexpected = resultingErrors.where((e) => !expected.isExpectedError(e));
-    if (unexpected.isNotEmpty) {
-      throw AssertionError('Cannot forward an unexpected errors: $unexpected');
-    }
-
-    return Result.error(resultingErrors, expected);
+    return _forward(success: success, failure: failure, expected: expected);
   }
 
   /// Allows to forward and transform successful and failed results.
@@ -198,37 +169,7 @@ class Result<T, Errors extends IExpectedErrors> {
       {U Function(T r)? success, Object Function(Object err)? failure}) {
     final expected = Errors3<E0, E1, E2>();
 
-    if (success == null && failure == null) {
-      throw AssertionError('Either success or failure should be provided');
-    }
-
-    if (_data == null && errors.isEmpty) {
-      throw AssertionError('Result object in incorrect state, should have either data or errors');
-    }
-
-    if (_data != null) {
-      if (success == null) {
-        throw AssertionError('Cannot forward a successful result without a success callback');
-      }
-
-      return Result.success(success(_data as T), expected);
-    }
-
-    if (errors.isNotEmpty && failure == null) {
-      throw AssertionError('Cannot forward a failed result without a failure callback');
-    }
-
-    var resultingErrors = errors;
-    if (failure != null) {
-      resultingErrors = resultingErrors.map(failure).toList();
-    }
-
-    final unexpected = resultingErrors.where((e) => !expected.isExpectedError(e));
-    if (unexpected.isNotEmpty) {
-      throw AssertionError('Cannot forward an unexpected errors: $unexpected');
-    }
-
-    return Result.error(resultingErrors, expected);
+    return _forward(success: success, failure: failure, expected: expected);
   }
 
   Result<U, Errors4<E0, E1, E2, E3>>
@@ -236,37 +177,7 @@ class Result<T, Errors extends IExpectedErrors> {
           {U Function(T r)? success, Object Function(Object err)? failure}) {
     final expected = Errors4<E0, E1, E2, E3>();
 
-    if (success == null && failure == null) {
-      throw AssertionError('Either success or failure should be provided');
-    }
-
-    if (_data == null && errors.isEmpty) {
-      throw AssertionError('Result object in incorrect state, should have either data or errors');
-    }
-
-    if (_data != null) {
-      if (success == null) {
-        throw AssertionError('Cannot forward a successful result without a success callback');
-      }
-
-      return Result.success(success(_data as T), expected);
-    }
-
-    if (errors.isNotEmpty && failure == null) {
-      throw AssertionError('Cannot forward a failed result without a failure callback');
-    }
-
-    var resultingErrors = errors;
-    if (failure != null) {
-      resultingErrors = resultingErrors.map(failure).toList();
-    }
-
-    final unexpected = resultingErrors.where((e) => !expected.isExpectedError(e));
-    if (unexpected.isNotEmpty) {
-      throw AssertionError('Cannot forward an unexpected errors: $unexpected');
-    }
-
-    return Result.error(resultingErrors, expected);
+    return _forward(success: success, failure: failure, expected: expected);
   }
 
   Result<U, Errors5<E0, E1, E2, E3, E4>>
@@ -274,37 +185,7 @@ class Result<T, Errors extends IExpectedErrors> {
           {U Function(T r)? success, Object Function(Object err)? failure}) {
     final expected = Errors5<E0, E1, E2, E3, E4>();
 
-    if (success == null && failure == null) {
-      throw AssertionError('Either success or failure should be provided');
-    }
-
-    if (_data == null && errors.isEmpty) {
-      throw AssertionError('Result object in incorrect state, should have either data or errors');
-    }
-
-    if (_data != null) {
-      if (success == null) {
-        throw AssertionError('Cannot forward a successful result without a success callback');
-      }
-
-      return Result.success(success(_data as T), expected);
-    }
-
-    if (errors.isNotEmpty && failure == null) {
-      throw AssertionError('Cannot forward a failed result without a failure callback');
-    }
-
-    var resultingErrors = errors;
-    if (failure != null) {
-      resultingErrors = resultingErrors.map(failure).toList();
-    }
-
-    final unexpected = resultingErrors.where((e) => !expected.isExpectedError(e));
-    if (unexpected.isNotEmpty) {
-      throw AssertionError('Cannot forward an unexpected errors: $unexpected');
-    }
-
-    return Result.error(resultingErrors, expected);
+    return _forward(success: success, failure: failure, expected: expected);
   }
 
   Result<U, Errors6<E0, E1, E2, E3, E4, E5>> forward6<
@@ -317,37 +198,7 @@ class Result<T, Errors extends IExpectedErrors> {
       E5 extends Object>({U Function(T r)? success, Object Function(Object err)? failure}) {
     final expected = Errors6<E0, E1, E2, E3, E4, E5>();
 
-    if (success == null && failure == null) {
-      throw AssertionError('Either success or failure should be provided');
-    }
-
-    if (_data == null && errors.isEmpty) {
-      throw AssertionError('Result object in incorrect state, should have either data or errors');
-    }
-
-    if (_data != null) {
-      if (success == null) {
-        throw AssertionError('Cannot forward a successful result without a success callback');
-      }
-
-      return Result.success(success(_data as T), expected);
-    }
-
-    if (errors.isNotEmpty && failure == null) {
-      throw AssertionError('Cannot forward a failed result without a failure callback');
-    }
-
-    var resultingErrors = errors;
-    if (failure != null) {
-      resultingErrors = resultingErrors.map(failure).toList();
-    }
-
-    final unexpected = resultingErrors.where((e) => !expected.isExpectedError(e));
-    if (unexpected.isNotEmpty) {
-      throw AssertionError('Cannot forward an unexpected errors: $unexpected');
-    }
-
-    return Result.error(resultingErrors, expected);
+    return _forward(success: success, failure: failure, expected: expected);
   }
 
   final IExpectedErrors _expectedErrors;
